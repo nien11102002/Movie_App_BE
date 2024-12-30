@@ -1,0 +1,127 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model banners {
+  banner_id  Int       @id @default(autoincrement())
+  movie_id   Int?
+  image      String?   @db.VarChar(255)
+  created_at DateTime? @default(now()) @db.Timestamp(0)
+  updated_at DateTime? @default(now()) @db.Timestamp(0)
+  movies     movies?   @relation(fields: [movie_id], references: [movie_id], onDelete: Cascade, onUpdate: NoAction, map: "banners_ibfk_1")
+
+  @@index([movie_id], map: "movie_id")
+}
+
+model cinema_chains {
+  cinema_chain_id   Int           @id @default(autoincrement())
+  cinema_chain_name String?       @db.VarChar(255)
+  logo              String?       @db.VarChar(255)
+  created_at        DateTime?     @default(now()) @db.Timestamp(0)
+  updated_at        DateTime?     @default(now()) @db.Timestamp(0)
+  multiplexes       multiplexes[]
+}
+
+model cinemas {
+  cinema_id    Int          @id @default(autoincrement())
+  cinema_name  String?      @db.VarChar(255)
+  multiplex_id Int?
+  created_at   DateTime?    @default(now()) @db.Timestamp(0)
+  updated_at   DateTime?    @default(now()) @db.Timestamp(0)
+  multiplexes  multiplexes? @relation(fields: [multiplex_id], references: [multiplex_id], onDelete: Cascade, onUpdate: NoAction, map: "cinemas_ibfk_1")
+  seats        seats[]
+  showtimes    showtimes[]
+
+  @@index([multiplex_id], map: "multiplex_id")
+}
+
+model movies {
+  movie_id     Int         @id @default(autoincrement())
+  movie_name   String?     @db.VarChar(255)
+  trailer      String?     @db.VarChar(255)
+  image        String?     @db.VarChar(255)
+  description  String?     @db.VarChar(255)
+  premiere_day DateTime?   @db.Timestamp(0)
+  rating       Int?
+  hot          Boolean?
+  is_showing   Boolean?
+  is_coming    Boolean?
+  created_at   DateTime?   @default(now()) @db.Timestamp(0)
+  updated_at   DateTime?   @default(now()) @db.Timestamp(0)
+  banners      banners[]
+  showtimes    showtimes[]
+}
+
+model multiplexes {
+  multiplex_id    Int            @id @default(autoincrement())
+  multiplex_name  String?        @db.VarChar(255)
+  address         String?        @db.VarChar(255)
+  cinema_chain_id Int?
+  created_at      DateTime?      @default(now()) @db.Timestamp(0)
+  updated_at      DateTime?      @default(now()) @db.Timestamp(0)
+  cinemas         cinemas[]
+  cinema_chains   cinema_chains? @relation(fields: [cinema_chain_id], references: [cinema_chain_id], onDelete: Cascade, onUpdate: NoAction, map: "multiplexes_ibfk_1")
+
+  @@index([cinema_chain_id], map: "cinema_chain_id")
+}
+
+model seats {
+  seat_id         Int               @id @default(autoincrement())
+  seat_name       String?           @db.VarChar(255)
+  seat_type       String?           @db.VarChar(255)
+  cinema_id       Int?
+  created_at      DateTime?         @default(now()) @db.Timestamp(0)
+  updated_at      DateTime?         @default(now()) @db.Timestamp(0)
+  cinemas         cinemas?          @relation(fields: [cinema_id], references: [cinema_id], onDelete: Cascade, onUpdate: NoAction, map: "seats_ibfk_1")
+  ticket_bookings ticket_bookings[]
+
+  @@index([cinema_id], map: "cinema_id")
+}
+
+model showtimes {
+  showtime_id     Int               @id @default(autoincrement())
+  cinema_id       Int?
+  movie_id        Int?
+  showtime        DateTime?         @db.Timestamp(0)
+  ticket_price    Int?
+  created_at      DateTime?         @default(now()) @db.Timestamp(0)
+  updated_at      DateTime?         @default(now()) @db.Timestamp(0)
+  movies          movies?           @relation(fields: [movie_id], references: [movie_id], onDelete: Cascade, onUpdate: NoAction, map: "showtimes_ibfk_1")
+  cinemas         cinemas?          @relation(fields: [cinema_id], references: [cinema_id], onDelete: Cascade, onUpdate: NoAction, map: "showtimes_ibfk_2")
+  ticket_bookings ticket_bookings[]
+
+  @@index([cinema_id], map: "cinema_id")
+  @@index([movie_id], map: "movie_id")
+}
+
+model ticket_bookings {
+  account_id  Int
+  showtime_id Int
+  seat_id     Int
+  created_at  DateTime? @default(now()) @db.Timestamp(0)
+  updated_at  DateTime? @default(now()) @db.Timestamp(0)
+  users       users     @relation(fields: [account_id], references: [account_id], onDelete: Cascade, onUpdate: NoAction, map: "ticket_bookings_ibfk_1")
+  showtimes   showtimes @relation(fields: [showtime_id], references: [showtime_id], onDelete: Cascade, onUpdate: NoAction, map: "ticket_bookings_ibfk_2")
+  seats       seats     @relation(fields: [seat_id], references: [seat_id], onDelete: Cascade, onUpdate: NoAction, map: "ticket_bookings_ibfk_3")
+
+  @@id([account_id, showtime_id, seat_id])
+  @@index([seat_id], map: "seat_id")
+  @@index([showtime_id], map: "showtime_id")
+}
+
+model users {
+  account_id      Int               @id @default(autoincrement())
+  full_name       String?           @db.VarChar(255)
+  email           String?           @db.VarChar(255)
+  phone_number    String?           @db.VarChar(15)
+  password        String?           @db.VarChar(255)
+  user_type       String?           @db.VarChar(255)
+  created_at      DateTime?         @default(now()) @db.Timestamp(0)
+  updated_at      DateTime?         @default(now()) @db.Timestamp(0)
+  ticket_bookings ticket_bookings[]
+}
