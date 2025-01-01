@@ -7,12 +7,12 @@ export class RegisterDto {
   account: string;
 
   @ApiProperty()
-  @IsEmail({}, { message: `Email is not validation` })
-  email: string;
-
-  @ApiProperty()
   @IsString()
   password: string;
+
+  @ApiProperty()
+  @IsEmail({}, { message: `Email is not validation` })
+  email: string;
 
   @ApiProperty()
   @IsString()
@@ -21,4 +21,8 @@ export class RegisterDto {
   @ApiProperty()
   @IsString()
   user_type: string;
+
+  @ApiProperty()
+  @IsString()
+  phone_number: string;
 }

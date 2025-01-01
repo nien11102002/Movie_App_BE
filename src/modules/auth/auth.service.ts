@@ -66,7 +66,7 @@ export class AuthService {
   }
 
   async register(registerDto: RegisterDto) {
-    const { email, password, full_name } = registerDto;
+    const { email, password, full_name, phone_number, account } = registerDto;
 
     const userExists = await this.prisma.users.findFirst({
       where: {
@@ -82,9 +82,16 @@ export class AuthService {
         email: email,
         full_name: full_name,
         password: hashPassword,
+        phone_number: full_name,
+        user_type: 'Customer',
+        account: account,
       },
       select: {
-        account_id: true,
+        account: true,
+        full_name: true,
+        email: true,
+        phone_number: true,
+        user_type: true,
       },
     });
 
