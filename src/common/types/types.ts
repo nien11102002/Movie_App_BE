@@ -7,3 +7,5 @@ export type TUser = {
   phone_number?: string;
   user_type?: String;
 };
+
+export type TUserAccount = { id?: number; password?: string };

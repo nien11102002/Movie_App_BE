@@ -1,117 +1,118 @@
-DROP DATABASE IF EXISTS db_app_food;
+DROP DATABASE IF EXISTS db_movie;
 CREATE DATABASE IF NOT EXISTS db_movie;
 
-use db_movie;
+USE db_movie;
 
 CREATE TABLE movies (
-	movie_id INT PRIMARY KEY AUTO_INCREMENT,
-	movie_name VARCHAR(255),
-	trailer VARCHAR(255),
-	image VARCHAR(255),
-	description VARCHAR(255),
-	premiere_day TIMESTAMP,
-	rating INT,
-	hot BOOLEAN,
-	is_showing BOOLEAN,
-	is_coming BOOLEAN,
-		
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    movie_id INT PRIMARY KEY AUTO_INCREMENT,
+    movie_name VARCHAR(255),
+    trailer VARCHAR(255),
+    image VARCHAR(255),
+    description VARCHAR(255),
+    premiere_day TIMESTAMP,
+    rating INT,
+    hot BOOLEAN,
+    is_showing BOOLEAN,
+    is_coming BOOLEAN,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE banners (
-	banner_id INT PRIMARY KEY AUTO_INCREMENT,
-	movie_id INT,
-	image VARCHAR(255),
-	
-	FOREIGN KEY (movie_id) REFERENCES movies(movie_id) ON DELETE CASCADE,
-	
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    banner_id INT PRIMARY KEY AUTO_INCREMENT,
+    movie_id INT,
+    image VARCHAR(255),
+
+    FOREIGN KEY (movie_id) REFERENCES movies(movie_id) ON DELETE CASCADE,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE cinema_chains (
-	cinema_chain_id INT PRIMARY KEY AUTO_INCREMENT,
-	cinema_chain_name VARCHAR(255),
-	logo VARCHAR(255),
-	
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+CREATE TABLE cineplexes (
+    cineplex_id INT PRIMARY KEY AUTO_INCREMENT,
+    cineplex_name VARCHAR(255),
+    logo VARCHAR(255),
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE multiplexes (
-	multiplex_id INT PRIMARY KEY AUTO_INCREMENT,
-	multiplex_name VARCHAR(255),
-	`address` VARCHAR(255),
-	cinema_chain_id INT,
-	
-	FOREIGN KEY (cinema_chain_id) REFERENCES cinema_chains(cinema_chain_id) ON DELETE CASCADE,
-	
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    multiplex_id INT PRIMARY KEY AUTO_INCREMENT,
+    multiplex_name VARCHAR(255),
+    `address` VARCHAR(255),
+    cineplex_id INT,
+
+    FOREIGN KEY (cineplex_id) REFERENCES cineplexes(cineplex_id) ON DELETE CASCADE,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE cinemas (
-	cinema_id INT PRIMARY KEY AUTO_INCREMENT,
-	cinema_name VARCHAR(255),
-	multiplex_id INT,
-	
-	FOREIGN KEY (multiplex_id) REFERENCES multiplexes(multiplex_id) ON DELETE CASCADE,
-	
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    cinema_id INT PRIMARY KEY AUTO_INCREMENT,
+    cinema_name VARCHAR(255),
+    multiplex_id INT,
+
+    FOREIGN KEY (multiplex_id) REFERENCES multiplexes(multiplex_id) ON DELETE CASCADE,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE seats (
-	seat_id INT PRIMARY KEY AUTO_INCREMENT,
-	seat_name VARCHAR(255),
-	seat_type VARCHAR(255),
-	cinema_id INT,
-	
-	FOREIGN KEY (cinema_id) REFERENCES cinemas(cinema_id) ON DELETE CASCADE,
-	
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    seat_id INT PRIMARY KEY AUTO_INCREMENT,
+    seat_name VARCHAR(255),
+    seat_type VARCHAR(255),
+    cinema_id INT,
+
+    FOREIGN KEY (cinema_id) REFERENCES cinemas(cinema_id) ON DELETE CASCADE,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE users (
-	account_id  INT PRIMARY KEY AUTO_INCREMENT,
-	full_name VARCHAR(255),
-	email VARCHAR(255),
-	phone_number VARCHAR(15),
-	`password` VARCHAR(255),
-	user_type VARCHAR(255),
-	
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    account_id INT PRIMARY KEY AUTO_INCREMENT,
+    account VARCHAR(255) UNIQUE,
+    full_name VARCHAR(255),
+    email VARCHAR(255),
+    phone_number VARCHAR(15),
+    `password` VARCHAR(255),
+    user_type VARCHAR(255),
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE showtimes (
-	showtime_id  INT PRIMARY KEY AUTO_INCREMENT,
-	cinema_id INT,
-	movie_id INT,
-	showtime TIMESTAMP,
-	ticket_price INT,
+    showtime_id INT PRIMARY KEY AUTO_INCREMENT,
+    cinema_id INT,
+    movie_id INT,
+    showtime TIMESTAMP,
+    ticket_price INT,
 
-	FOREIGN KEY (movie_id) REFERENCES movies(movie_id) ON DELETE CASCADE,
-	FOREIGN KEY (cinema_id) REFERENCES cinemas(cinema_id) ON DELETE CASCADE,
-	
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    FOREIGN KEY (movie_id) REFERENCES movies(movie_id) ON DELETE CASCADE,
+    FOREIGN KEY (cinema_id) REFERENCES cinemas(cinema_id) ON DELETE CASCADE,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE ticket_bookings (
-	account_id  INT,
-	showtime_id INT,
-	seat_id INT,
-	
-	PRIMARY KEY (account_id,showtime_id,seat_id),
-	FOREIGN KEY (account_id) REFERENCES users(account_id) ON DELETE CASCADE,
-	FOREIGN KEY (showtime_id) REFERENCES showtimes(showtime_id) ON DELETE CASCADE,
-	FOREIGN KEY (seat_id) REFERENCES seats(seat_id) ON DELETE CASCADE,
+    account_id INT,
+    showtime_id INT,
+    seat_id INT,
 
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    PRIMARY KEY (account_id, showtime_id, seat_id),
+    FOREIGN KEY (account_id) REFERENCES users(account_id) ON DELETE CASCADE,
+    FOREIGN KEY (showtime_id) REFERENCES showtimes(showtime_id) ON DELETE CASCADE,
+    FOREIGN KEY (seat_id) REFERENCES seats(seat_id) ON DELETE CASCADE,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Insert initial movies
@@ -128,15 +129,15 @@ VALUES
 (2, 'banner_avatar2.jpg'),
 (3, 'banner_matrix.jpg');
 
--- Insert cinema chains
-INSERT INTO cinema_chains (cinema_chain_name, logo)
+-- Insert cineplexes
+INSERT INTO cineplexes (cineplex_name, logo)
 VALUES 
 ('Cineworld', 'cineworld_logo.jpg'),
 ('AMC Theatres', 'amc_logo.jpg'),
 ('Regal Cinemas', 'regal_logo.jpg');
 
 -- Insert multiplexes
-INSERT INTO multiplexes (multiplex_name, address, cinema_chain_id)
+INSERT INTO multiplexes (multiplex_name, address, cineplex_id)
 VALUES 
 ('Cineworld Downtown', '123 Main St', 1),
 ('AMC Uptown', '456 High St', 2),
@@ -160,10 +161,10 @@ VALUES
 ('C2', 'Standard', 3);
 
 -- Insert users
-INSERT INTO users (full_name, email, phone_number, password, user_type)
+INSERT INTO users (account,full_name, email, phone_number, password, user_type)
 VALUES 
-('John Doe', 'john.doe@example.com', '1234567890', 'password123', 'customer'),
-('Jane Smith', 'jane.smith@example.com', '0987654321', 'password123', 'admin');
+('johndoe','John Doe', 'john.doe@example.com', '1234567890', 'password123', 'customer'),
+('janesmith','Jane Smith', 'jane.smith@example.com', '0987654321', 'password123', 'admin');
 
 -- Insert showtimes
 INSERT INTO showtimes (cinema_id, movie_id, showtime, ticket_price)
