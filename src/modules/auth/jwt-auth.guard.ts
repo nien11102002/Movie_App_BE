@@ -20,13 +20,22 @@ export class JwtAuthGuard extends AuthGuard(`protect`) {
       context.getHandler(),
       context.getClass(),
     ]);
+
     if (isPublic) {
       return true;
     }
+
     return super.canActivate(context);
   }
 
   handleRequest(err, user, info) {
+    // console.log({ user, info, err });
+    if (!user) {
+      if (!info || info.message === 'No auth token') {
+        throw new UnauthorizedException('Token is required for access');
+      }
+    }
+
     if (info instanceof TokenExpiredError) throw new ForbiddenException();
 
     if (info instanceof JsonWebTokenError) throw new UnauthorizedException();

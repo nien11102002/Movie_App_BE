@@ -5,6 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { LoggingInterceptor } from './common/interceptor/logging.interceptor';
 import { ResponseSuccessInterceptor } from './common/interceptor/response-success.interceptor';
 import { AllExceptionFilter } from './common/filter/all-exception.filter';
+import { JwtAuthGuard } from './modules/auth/jwt-auth.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,7 +13,7 @@ async function bootstrap() {
   const reflector = app.get(Reflector);
 
   app.useGlobalPipes(new ValidationPipe());
-  // app.useGlobalGuards(new JwtAuthGuard(reflector));
+  app.useGlobalGuards(new JwtAuthGuard(reflector));
   app.useGlobalInterceptors(new LoggingInterceptor());
   app.useGlobalInterceptors(new ResponseSuccessInterceptor(reflector));
   app.useGlobalFilters(new AllExceptionFilter());
@@ -23,7 +24,11 @@ async function bootstrap() {
     .setTitle('NestJS')
     .setDescription('The NestJS API description')
     .setVersion('0.1')
-    .addTag('user')
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+    })
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

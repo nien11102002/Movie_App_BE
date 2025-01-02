@@ -20,11 +20,11 @@ export class AuthService {
   ) {}
 
   async login(loginDto: LoginDto) {
-    const { email, password } = loginDto;
+    const { account, password } = loginDto;
 
     const userExists = await this.prisma.users.findFirst({
       where: {
-        email: email,
+        account: account,
       },
       select: {
         account_id: true,
@@ -34,7 +34,7 @@ export class AuthService {
 
     console.log();
     if (!userExists)
-      throw new BadRequestException('Email không tồn tại, vui lòng đăng ký');
+      throw new BadRequestException('Account không tồn tại, vui lòng đăng ký');
 
     const passHash = userExists.password;
     const isPassword = bcrypt.compareSync(password, passHash);
@@ -47,7 +47,7 @@ export class AuthService {
 
   createTokens(userExists: TUserAccount) {
     const accessToken = this.jwtService.sign(
-      { user_id: userExists.id },
+      { account_id: userExists.account_id },
       {
         secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
         expiresIn: this.configService.get<string>('ACCESS_TOKEN_EXPIRES'),
@@ -55,7 +55,7 @@ export class AuthService {
     );
 
     const refreshToken = this.jwtService.sign(
-      { user_id: userExists.id },
+      { account_id: userExists.account_id },
       {
         secret: this.configService.get<string>('REFRESH_TOKEN_SECRET'),
         expiresIn: this.configService.get<string>('REFRESH_TOKEN_EXPIRES'),
@@ -82,7 +82,7 @@ export class AuthService {
         email: email,
         full_name: full_name,
         password: hashPassword,
-        phone_number: full_name,
+        phone_number: phone_number,
         user_type: 'Customer',
         account: account,
       },
