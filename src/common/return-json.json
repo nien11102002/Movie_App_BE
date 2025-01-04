@@ -1,0 +1,32 @@
+{
+  "listCumRap": [
+    {
+      "danhSachPhim": [
+        {
+          "listLichChieuTheoPhim": [
+            {
+              "maLichChieu": 47740,
+              "maRap": "451",
+              "tenRap": "Rạp 1",
+              "ngayChieuGioChieu": "2024-09-28T00:15:00",
+              "giaVe": 75000
+            }
+          ],
+          "maPhim": 1283,
+          "tenPhim": "Lật mặt 48h",
+          "hinhAnh": "https://movienew.cybersoft.edu.vn/hinhanh/lat-mat-48h_gp01.jpg",
+          "hot": true,
+          "dangChieu": true,
+          "sapChieu": true
+        }
+      ],
+      "maCumRap": "bhd-star-cineplex-3-2",
+      "tenCumRap": "BHD Star Cineplex - 3/2",
+      "hinhAnh": "https://s3img.vcdn.vn/123phim/2021/01/bhd-star-bitexco-16105952137769.png",
+      "diaChi": "L5-Vincom 3/2, 3C Đường 3/2, Q.10"
+    }
+  ],
+  "maHeThongRap": "BHDStar",
+  "tenHeThongRap": "BHD Star Cineplex",
+  "logo": "https://movienew.cybersoft.edu.vn/hinhanh/bhd-star-cineplex.png"
+}
