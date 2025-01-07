@@ -100,6 +100,10 @@ async function main() {
     ],
   });
 
+  await prisma.user_types.createMany({
+    data: [{ user_type: 'Admin' }, { user_type: 'Customer' }],
+  });
+
   // Insert users
   await prisma.users.createMany({
     data: [
@@ -109,7 +113,7 @@ async function main() {
         email: 'john.doe@example.com',
         phone_number: '1234567890',
         password: 'password123',
-        user_type: 'customer',
+        user_type_id: 2,
       },
       {
         account: 'janesmith',
@@ -117,7 +121,7 @@ async function main() {
         email: 'jane.smith@example.com',
         phone_number: '0987654321',
         password: 'password123',
-        user_type: 'admin',
+        user_type_id: 1,
       },
     ],
   });

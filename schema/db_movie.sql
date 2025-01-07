@@ -74,6 +74,15 @@ CREATE TABLE seats (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+CREATE TABLE user_types (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_type VARCHAR(255) UNIQUE,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+
 CREATE TABLE users (
     account_id INT PRIMARY KEY AUTO_INCREMENT,
     account VARCHAR(255) UNIQUE,
@@ -81,7 +90,9 @@ CREATE TABLE users (
     email VARCHAR(255),
     phone_number VARCHAR(15),
     `password` VARCHAR(255),
-    user_type VARCHAR(255),
+    user_type_id INT,
+    
+    FOREIGN KEY (user_type_id) REFERENCES user_types(id) ON DELETE CASCADE,
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -114,6 +125,12 @@ CREATE TABLE ticket_bookings (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+INSERT INTO user_types (user_type)
+VALUES 
+('Admin'),
+('Customer');
+
 
 -- Insert initial movies
 INSERT INTO movies (movie_name, trailer, image, description, premiere_day, rating, hot, is_showing, is_coming)
@@ -161,10 +178,10 @@ VALUES
 ('C2', 'Standard', 3);
 
 -- Insert users
-INSERT INTO users (account,full_name, email, phone_number, password, user_type)
+INSERT INTO users (account,full_name, email, phone_number, password, user_type_id)
 VALUES 
-('johndoe','John Doe', 'john.doe@example.com', '1234567890', 'password123', 'customer'),
-('janesmith','Jane Smith', 'jane.smith@example.com', '0987654321', 'password123', 'admin');
+('johndoe','John Doe', 'john.doe@example.com', '1234567890', 'password123', 2),
+('janesmith','Jane Smith', 'jane.smith@example.com', '0987654321', 'password123', 1);
 
 -- Insert showtimes
 INSERT INTO showtimes (cinema_id, movie_id, showtime, ticket_price)

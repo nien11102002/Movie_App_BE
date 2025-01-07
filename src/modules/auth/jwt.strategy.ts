@@ -29,7 +29,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, `protect`) {
         full_name: true,
         email: true,
         phone_number: true,
-        user_type: true,
+        user_type_id: true,
       },
     });
 

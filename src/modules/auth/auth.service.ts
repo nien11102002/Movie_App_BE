@@ -83,7 +83,7 @@ export class AuthService {
         full_name: full_name,
         password: hashPassword,
         phone_number: phone_number,
-        user_type: 'Customer',
+        user_type_id: 2,
         account: account,
       },
       select: {
@@ -91,7 +91,7 @@ export class AuthService {
         full_name: true,
         email: true,
         phone_number: true,
-        user_type: true,
+        user_type_id: true,
       },
     });
 
