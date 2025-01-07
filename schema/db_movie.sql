@@ -14,7 +14,7 @@ CREATE TABLE movies (
     hot BOOLEAN,
     is_showing BOOLEAN,
     is_coming BOOLEAN,
-
+    duration INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

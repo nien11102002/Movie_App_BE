@@ -1,34 +1,61 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { TicketBookingService } from './ticket-booking.service';
-import { CreateTicketBookingDto } from './dto/create-ticket-booking.dto';
-import { UpdateTicketBookingDto } from './dto/update-ticket-booking.dto';
+import { ApiBearerAuth, ApiBody, ApiQuery } from '@nestjs/swagger';
+import { BookTicketDto } from './dto/create-ticket-booking.dto';
+import { User } from 'src/common/decorators/user.decorator';
+import { TUser } from 'src/common/types/types';
+import { CreateShowtimeDto } from './dto/create-showtime.dto';
 
+@ApiBearerAuth()
 @Controller('ticket-booking')
 export class TicketBookingController {
   constructor(private readonly ticketBookingService: TicketBookingService) {}
 
-  @Post()
-  create(@Body() createTicketBookingDto: CreateTicketBookingDto) {
-    return this.ticketBookingService.create(createTicketBookingDto);
+  @Post(`ticket-booking`)
+  @ApiBody({
+    description: 'Body for booking tickets',
+    schema: {
+      type: 'object',
+      properties: {
+        showtime_id: { type: 'number', example: 1 },
+        listBookedTicket: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              seat_id: { type: 'number', example: 1 },
+              ticket_price: { type: 'number', example: 15 },
+            },
+          },
+          example: [
+            { seat_id: 1, ticket_price: 15 },
+            { seat_id: 2, ticket_price: 15 },
+          ],
+        },
+      },
+    },
+  })
+  bookTicket(@Body() list_ticket: BookTicketDto, @User() user: TUser) {
+    return this.ticketBookingService.bookTicket(list_ticket, user);
   }
 
-  @Get()
-  findAll() {
-    return this.ticketBookingService.findAll();
+  @Get(`get-list-ticket`)
+  @ApiQuery({ name: 'showtime_id', type: Number, required: false })
+  getListTicket(@Query('showtime_id') showtime_id: number) {
+    return this.ticketBookingService.getListTicket(+showtime_id);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.ticketBookingService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTicketBookingDto: UpdateTicketBookingDto) {
-    return this.ticketBookingService.update(+id, updateTicketBookingDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.ticketBookingService.remove(+id);
+  @Post(`create-showtime`)
+  createShowtime(@Body() createShowtime: CreateShowtimeDto) {
+    return this.ticketBookingService.createShowtime(createShowtime);
   }
 }

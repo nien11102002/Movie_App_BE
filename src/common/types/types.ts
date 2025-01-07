@@ -1,5 +1,6 @@
 export type TUser = {
-  account_id?: number;
+  account_id: number;
+  account: string;
   full_name?: string;
   email?: string;
   phone_number?: string;

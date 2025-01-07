@@ -25,6 +25,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, `protect`) {
       where: { account_id: Number(payload.account_id) },
       select: {
         account: true,
+        account_id: true,
         full_name: true,
         email: true,
         phone_number: true,
