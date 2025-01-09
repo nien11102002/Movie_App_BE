@@ -12,8 +12,12 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { Public } from 'src/common/decorators/public.decorator';
-import { ApiQuery } from '@nestjs/swagger';
+import { ApiBody, ApiQuery } from '@nestjs/swagger';
 import { Request } from 'express';
+import { AddUserDto } from './dto/add_user.dto';
+import { UpdateUserInfoDto } from './dto/update_user_info.dto';
+import { User } from 'src/common/decorators/user.decorator';
+import { TUser } from 'src/common/types/types';
 
 @Public()
 @Controller('user')
@@ -55,8 +59,9 @@ export class UserController {
   }
 
   @Get('search-user')
-  searchUser() {
-    return this.userService.searchUser();
+  @ApiQuery({ name: 'keyword', required: false })
+  searchUser(@Query(`keyword`) keyword: string) {
+    return this.userService.searchUser(keyword);
   }
 
   @Get('search-user-pagination')
@@ -75,41 +80,47 @@ export class UserController {
     description: 'Number of items per page',
   })
   searchUserPagination(
-    @Query('keyword') keyword: string,
-    @Req() req: Request,
+    @Query('keyword') keyword?: string,
     @Query(`page`) page?: string,
     @Query(`pageSize`) pageSize?: string,
   ) {
-    return this.userService.searchUserPagination();
+    return this.userService.searchUserPagination(keyword, +page, +pageSize);
   }
 
-  @Post('account-info')
-  accountInfo() {
-    return this.userService.accountInfo();
-  }
+  // @Post('account-info')
+  // accountInfo() {
+  //   return this.userService.accountInfo();
+  // }
 
-  @Post('get-user-info')
-  getUserInfo() {
-    return this.userService.getUserInfo();
+  @Get('get-user-info')
+  getUserInfo(@User() user: TUser) {
+    return this.userService.getUserInfo(user);
   }
 
   @Post('add-user')
-  addUser() {
-    return this.userService.addUser();
+  addUser(@Body() addUser: AddUserDto) {
+    return this.userService.addUser(addUser);
   }
 
   @Put('update-user-info')
-  put_UpdateUserInfo() {
-    return this.userService.put_UpdateUserInfo();
+  @ApiBody({
+    description:
+      'just input the fields you want to update from the given fields',
+  })
+  put_UpdateUserInfo(
+    @Body() updateUserInfo: UpdateUserInfoDto,
+    @User() user: TUser,
+  ) {
+    return this.userService.put_UpdateUserInfo(updateUserInfo, user);
   }
 
-  @Post('update-user-info')
-  post_UpdateUserInfo() {
-    return this.userService.post_UpdateUserInfo();
-  }
+  // @Post('update-user-info')
+  // post_UpdateUserInfo() {
+  //   return this.userService.post_UpdateUserInfo();
+  // }
 
   @Delete('delete-user')
-  deleteUser() {
-    return this.userService.deleteUser();
+  deleteUser(@Query('account') account: string) {
+    return this.userService.deleteUser(account);
   }
 }

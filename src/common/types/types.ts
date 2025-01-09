@@ -4,7 +4,7 @@ export type TUser = {
   full_name?: string;
   email?: string;
   phone_number?: string;
-  user_type?: String;
+  user_type_id?: number;
 };
 
 export type TUserAccount = { account_id?: number; password?: string };
