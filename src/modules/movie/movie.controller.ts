@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { MovieService } from './movie.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
@@ -7,28 +16,53 @@ import { UpdateMovieDto } from './dto/update-movie.dto';
 export class MovieController {
   constructor(private readonly movieService: MovieService) {}
 
-  @Post()
-  create(@Body() createMovieDto: CreateMovieDto) {
-    return this.movieService.create(createMovieDto);
+  @Get(`get-list-banner`)
+  getListBanner() {
+    return this.movieService.getListBanner();
   }
 
-  @Get()
-  findAll() {
-    return this.movieService.findAll();
+  @Get(`get-list-movie`)
+  getListMovie(@Query('movie_name') movie_name: string) {
+    return this.movieService.getListMovie(movie_name);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.movieService.findOne(+id);
+  @Get(`get-list-movie-pagination`)
+  getListMoviePagination(
+    @Query('movie_name') movie_name: string,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
+  ) {
+    return this.movieService.getListMoviePagination(
+      movie_name,
+      +page,
+      +pageSize,
+    );
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMovieDto: UpdateMovieDto) {
-    return this.movieService.update(+id, updateMovieDto);
+  @Get(`get-list-movie-by-day`)
+  getListMovieByDay(
+    @Query('movie_name') movie_name: string,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
+    @Query('fromDate') fromDate: Date,
+    @Query('toDate') toDate: Date,
+  ) {
+    return this.movieService.getListMovieByDay(
+      movie_name,
+      page,
+      pageSize,
+      fromDate,
+      toDate,
+    );
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.movieService.remove(+id);
+  @Get(`movie-info`)
+  getMovieInfo(@Query('movie_id') movie_id: string) {
+    return this.movieService.getMovieInfo(+movie_id);
+  }
+
+  @Delete('delete-movie')
+  deleteMovie(@Query('movie_id') movie_id: string) {
+    return this.movieService.deleteMovie(+movie_id);
   }
 }
