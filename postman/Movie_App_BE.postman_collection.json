@@ -1,0 +1,1019 @@
+{
+	"info": {
+		"_postman_id": "05761713-7202-4e5f-be73-f60c96143cd9",
+		"name": "Movie_App_BE",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38965365"
+	},
+	"item": [
+		{
+			"name": "TicketBooking",
+			"item": [
+				{
+					"name": "Get list ticket",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/ticket-booking/get-list-ticket?showtime_id=1",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"ticket-booking",
+								"get-list-ticket"
+							],
+							"query": [
+								{
+									"key": "showtime_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Book Ticket",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"showtime_id\": 3,\r\n  \"listBookedTicket\": [\r\n    {\r\n      \"seat_id\": 1,\r\n      \"ticket_price\": 15\r\n    },\r\n    {\r\n      \"seat_id\": 2,\r\n      \"ticket_price\": 15\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/ticket-booking/ticket-booking",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"ticket-booking",
+								"ticket-booking"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Showtime",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"movie_id\": 3,\r\n  \"showtime\": \"2025-01-20T12:01:13.784Z\",\r\n  \"cinema_id\": 2,\r\n  \"ticket_price\": 100000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/ticket-booking/create-showtime",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"ticket-booking",
+								"create-showtime"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json()\r",
+									"\r",
+									"if(response.status === 'error') return\r",
+									"\r",
+									"const accessToken = response.metaData.accessToken\r",
+									"const refreshToken = response.metaData.refreshToken\r",
+									"\r",
+									"pm.collectionVariables.set(\"accessToken\", accessToken);\r",
+									"pm.collectionVariables.set(\"refreshToken\", refreshToken);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"account\": \"nizo\",\r\n  \"password\": \"1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/user/login",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"account\": \"nizo\",\r\n  \"password\": \"1234\",\r\n  \"email\": \"string@gmail.com\",\r\n  \"full_name\": \"string\",\r\n  \"user_type\": \"string\",\r\n  \"phone_number\": \"string\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/user/register",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"account\": \"nizo\",\r\n  \"password\": \"1234\",\r\n  \"email\": \"string@gmail.com\",\r\n  \"full_name\": \"string\",\r\n  \"user_type\": \"string\",\r\n  \"phone_number\": \"string\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/user/delete-user?account=janesmith",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"user",
+								"delete-user"
+							],
+							"query": [
+								{
+									"key": "account",
+									"value": "janesmith"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User Info",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"full_name\": \"NDN1\",\r\n  \"email\": \"string@gmail.com\",\r\n  \"phone_number\": \"string\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/user/update-user-info",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"user",
+								"update-user-info"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add new User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"account\": \"nizo2\",\r\n  \"password\": \"1234\",\r\n  \"email\": \"string@gmail.com\",\r\n  \"full_name\": \"string\",\r\n  \"user_type_id\": 1,\r\n  \"phone_number\": \"string\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/user/add-user",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"user",
+								"add-user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get List User Type",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/user/get-list-user-type",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"user",
+								"get-list-user-type"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get List User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/user/get-list-user?keyword=j",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"user",
+								"get-list-user"
+							],
+							"query": [
+								{
+									"key": "keyword",
+									"value": "j"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/user/get-list-user?keyword=j",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"user",
+								"get-list-user"
+							],
+							"query": [
+								{
+									"key": "keyword",
+									"value": "j"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Info",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/user/get-user-info",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"user",
+								"get-user-info"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get List User Pagination",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/user/get-list-user-pagination?keyword&page=2&pageSize=2",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"user",
+								"get-list-user-pagination"
+							],
+							"query": [
+								{
+									"key": "keyword",
+									"value": null
+								},
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "pageSize",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search User Pagination",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/user/get-list-user-pagination?keyword&page=2&pageSize=2",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"user",
+								"get-list-user-pagination"
+							],
+							"query": [
+								{
+									"key": "keyword",
+									"value": null
+								},
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "pageSize",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Movie",
+			"item": [
+				{
+					"name": "Get List Banner",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/movie/get-list-banner",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"movie",
+								"get-list-banner"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get List Movie",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/movie/get-list-movie?movie_name=t",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"movie",
+								"get-list-movie"
+							],
+							"query": [
+								{
+									"key": "movie_name",
+									"value": "t"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get List Movie Pagination",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/movie/get-list-movie-pagination?movie_name=t&page=2&pageSize=1",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"movie",
+								"get-list-movie-pagination"
+							],
+							"query": [
+								{
+									"key": "movie_name",
+									"value": "t"
+								},
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "pageSize",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get List Movie By Day",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/movie/get-list-movie-by-day?movie_name=t&page=&pageSize&fromDate=2025-01-10&toDate=2025-01-30",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"movie",
+								"get-list-movie-by-day"
+							],
+							"query": [
+								{
+									"key": "movie_name",
+									"value": "t"
+								},
+								{
+									"key": "page",
+									"value": ""
+								},
+								{
+									"key": "pageSize",
+									"value": null
+								},
+								{
+									"key": "fromDate",
+									"value": "2025-01-10"
+								},
+								{
+									"key": "toDate",
+									"value": "2025-01-30"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Movie Info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/movie/movie-info?movie_id=1",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"movie",
+								"movie-info"
+							],
+							"query": [
+								{
+									"key": "movie_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Movie",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/ADMIN/OneDrive - VNU-HCMUS/Pictures/hitler_cat_4.jpg"
+								},
+								{
+									"key": "movie_name",
+									"value": "ABC",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "trailer",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "premiere_day",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "rating",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "hot",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "is_showing",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "is_coming",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "duration",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{domain}}/movie/update-movie?movie_id=1",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"movie",
+								"update-movie"
+							],
+							"query": [
+								{
+									"key": "movie_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add new Movie",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/ADMIN/OneDrive - VNU-HCMUS/Pictures/hitler_cat_4.jpg"
+								},
+								{
+									"key": "movie_name",
+									"value": "Robin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{domain}}/movie/add-movie",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"movie",
+								"add-movie"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Movie",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/movie/delete-movie?movie_id=4",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"movie",
+								"delete-movie"
+							],
+							"query": [
+								{
+									"key": "movie_id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cinema",
+			"item": [
+				{
+					"name": "Get Cineplex Info",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/cinema/get-cineplex-info?cineplex_id=1",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"cinema",
+								"get-cineplex-info"
+							],
+							"query": [
+								{
+									"key": "cineplex_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Multiplex Info",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "movie_name",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{domain}}/cinema/get-multiplex-info?multiplex_id=1",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"cinema",
+								"get-multiplex-info"
+							],
+							"query": [
+								{
+									"key": "multiplex_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Showtimes By Cineplex",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "movie_name",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{domain}}/cinema/get-showtimes-by-cineplex?cineplex_id=1",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"cinema",
+								"get-showtimes-by-cineplex"
+							],
+							"query": [
+								{
+									"key": "cineplex_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Showtimes By Movie",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "movie_name",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{domain}}/cinema/get-showtimes-by-movie?movie_id=1",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"cinema",
+								"get-showtimes-by-movie"
+							],
+							"query": [
+								{
+									"key": "movie_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "domain",
+			"value": "localhost:3000/api",
+			"type": "string"
+		},
+		{
+			"key": "accessToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refreshToken",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
