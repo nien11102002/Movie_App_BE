@@ -60,21 +60,37 @@ export class MovieService {
     movie_name: string,
     page: number,
     pageSize: number,
-    fromDate: Date,
-    toDate: Date,
+    fromDate: string,
+    toDate: string,
   ) {
+    const parsedFromDate = new Date(fromDate);
+    const parsedToDate = new Date(toDate);
+
+    const isValidFromDate = !isNaN(parsedFromDate.getTime());
+    const isValidToDate = !isNaN(parsedToDate.getTime());
+
     page = page > 0 ? page : 1;
     pageSize = pageSize > 0 ? pageSize : 10;
     const skip = (page - 1) * pageSize;
 
-    const filterCondition = {
+    console.log({ fromDate, toDate });
+
+    const filterCondition: any = {
       movie_name: {
         contains: movie_name || '',
       },
-      showtimes: {
-        some: { showtime: { lte: toDate, gte: fromDate } },
-      },
     };
+
+    if (isValidFromDate || isValidToDate) {
+      filterCondition.showtimes = {
+        some: {
+          showtime: {
+            ...(isValidFromDate ? { gte: parsedFromDate } : {}),
+            ...(isValidToDate ? { lte: parsedToDate } : {}),
+          },
+        },
+      };
+    }
 
     const totalItem = await this.prisma.movies.count({
       where: filterCondition,
@@ -88,7 +104,17 @@ export class MovieService {
         created_at: 'asc',
       },
       include: {
-        showtimes: { select: { showtime: true } },
+        showtimes: {
+          where: {
+            showtime: {
+              ...(isValidFromDate ? { gte: parsedFromDate } : {}),
+              ...(isValidToDate ? { lte: parsedToDate } : {}),
+            },
+          },
+          select: {
+            showtime: true,
+          },
+        },
       },
     });
 
@@ -113,6 +139,56 @@ export class MovieService {
       where: { movie_id: movie_id },
     });
     return movie;
+  }
+
+  async addMovie(file: Express.Multer.File, movie_name: string) {
+    const newMovie = await this.prisma.movies.create({
+      data: { movie_name: movie_name, image: file.path },
+    });
+
+    return newMovie;
+  }
+
+  async updateMovie(
+    file: Express.Multer.File,
+    updatedBody: UpdateMovieDto,
+    movie_id: number,
+  ) {
+    const existedMovie = this.prisma.movies.findFirst({
+      where: { movie_id: movie_id },
+    });
+    if (!existedMovie)
+      throw new BadRequestException(`No exist movie_id ${movie_id}`);
+    const updateData: any = {};
+
+    if (updatedBody.movie_name) updateData.movie_name = updatedBody.movie_name;
+    if (updatedBody.description)
+      updateData.description = updatedBody.description;
+    if (updatedBody.trailer) updateData.trailer = updatedBody.trailer;
+    if (updatedBody.premiere_day)
+      updateData.premiere_day = updatedBody.premiere_day;
+    if (updatedBody.rating) updateData.rating = Number(updatedBody.rating);
+    if (updatedBody.hot !== undefined)
+      updateData.hot = Boolean(updatedBody.hot);
+    if (updatedBody.is_showing !== undefined)
+      updateData.is_showing = Boolean(updatedBody.is_showing);
+    if (updatedBody.is_coming !== undefined)
+      updateData.is_coming = Boolean(updatedBody.is_coming);
+    if (updatedBody.duration)
+      updateData.duration = Number(updatedBody.duration);
+
+    if (file) {
+      updateData.image = file.path;
+    }
+
+    console.log({ updateData });
+
+    const updatedMovie = await this.prisma.movies.update({
+      where: { movie_id: movie_id },
+      data: updateData,
+    });
+
+    return updatedMovie;
   }
 
   async deleteMovie(movie_id: number) {
