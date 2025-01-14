@@ -14,7 +14,7 @@ import { UpdateCinemaDto } from './dto/update-cinema.dto';
 import { Public } from 'src/common/decorators/public.decorator';
 import { ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 
-//@Public()
+@Public()
 @ApiBearerAuth()
 @Controller('cinema')
 export class CinemaController {

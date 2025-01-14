@@ -162,14 +162,21 @@ export class UserService {
   }
 
   async put_UpdateUserInfo(updateUserInfo: UpdateUserInfoDto, user: TUser) {
-    let { full_name, email, phone_number, user_type_id } = updateUserInfo;
+    let { full_name, email, phone_number } = updateUserInfo;
     const updatedUser = await this.prisma.users.update({
       where: { account_id: user.account_id },
       data: {
         full_name: full_name ? full_name : user.full_name,
         email: email ? email : user.email,
         phone_number: phone_number ? phone_number : user.phone_number,
-        user_type_id: user_type_id ? user_type_id : user.user_type_id,
+        // user_type_id: user_type_id ? user_type_id : user.user_type_id,
+      },
+      select: {
+        password: false,
+        full_name: true,
+        email: true,
+        phone_number: true,
+        user_types: { select: { user_type: true, id: true } },
       },
     });
     return updatedUser;

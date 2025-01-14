@@ -36,11 +36,12 @@ export class TicketBookingService {
       showtime_id,
       account_id: user.account_id,
     }));
-    console.log({ data });
     const newTickets = await this.prisma.ticket_bookings.createMany({
       data: data,
     });
-    return newTickets;
+
+    console.log(newTickets);
+    return 'Successfully create tickets';
   }
 
   async getListTicket(showtime_id: number) {

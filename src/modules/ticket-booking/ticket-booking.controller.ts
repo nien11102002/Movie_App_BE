@@ -14,6 +14,7 @@ import { BookTicketDto } from './dto/create-ticket-booking.dto';
 import { User } from 'src/common/decorators/user.decorator';
 import { TUser } from 'src/common/types/types';
 import { CreateShowtimeDto } from './dto/create-showtime.dto';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @ApiBearerAuth()
 @Controller('ticket-booking')
@@ -48,6 +49,7 @@ export class TicketBookingController {
     return this.ticketBookingService.bookTicket(list_ticket, user);
   }
 
+  @Public()
   @Get(`get-list-ticket`)
   @ApiQuery({ name: 'showtime_id', type: Number, required: false })
   getListTicket(@Query('showtime_id') showtime_id: number) {
